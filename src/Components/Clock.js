@@ -183,7 +183,7 @@ function Timer() {
 
   const alert = useRef(null);
   state['alert'] = alert;
-  // const AlertURL =
+  // const alarm =
   //   'https://www.trekcore.com/audio/redalertandklaxons/alertklaxon_clean.mp3';
 
   return (
