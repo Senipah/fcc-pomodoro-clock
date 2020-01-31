@@ -1,3 +1,15 @@
+:root {
+  --lcars-1: #FF9900;
+  --lcars-2: #CC99CC;
+  --lcars-3: #9999CC;
+  --lcars-4: #CC6666;
+  --lcars-5: #FFCC99;
+  --lcars-6: #9999FF;
+  --lcars-7: #FF9966;
+  --lcars-8: #CC6699;
+}
+
+
 #clock {
   display: flex;
   flex-direction: column;
