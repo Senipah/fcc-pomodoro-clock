@@ -12,6 +12,9 @@
     "react-dom": "^16.12.0",
     "react-scripts": "3.3.0"
   },
+  "resolutions": {
+    "serialize-javascript": "^2.1.1"
+  },
   "scripts": {
     "predeploy": "yarn run build",
     "deploy": "gh-pages -d build",
