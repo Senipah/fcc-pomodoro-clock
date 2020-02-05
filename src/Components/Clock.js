@@ -1,6 +1,16 @@
 import React from 'react';
-import './Clock.css';
+// import './Clock.css';
 import alarm from '../assets/audio/alertklaxon_clean.mp3';
+import {
+  LcarsWrapper,
+  LcarsHeader,
+  LcarsContainer,
+  themeColors,
+  LcarsContainerSection,
+  Button,
+  ButtonLeft,
+  ButtonRight
+} from './Lcars';
 const { useReducer, createContext, useContext, useEffect, useRef } = React;
 
 const initialState = {
@@ -19,8 +29,15 @@ export default function Clock() {
   return (
     <div id='clock'>
       <ClockContext.Provider value={{ state, dispatch }}>
-        <ControlGroup />
-        <Timer />
+        <LcarsWrapper>
+          <LcarsHeader title='pomodoro clock' color={themeColors.lcars4} />
+          <LcarsContainer title='timer' color={themeColors.lcars1}>
+            <ControlGroup />
+            <LcarsContainerSection>
+              <Timer />
+            </LcarsContainerSection>
+          </LcarsContainer>
+        </LcarsWrapper>
       </ClockContext.Provider>
     </div>
   );
@@ -121,28 +138,28 @@ function Control(props) {
   const titleCase =
     props.name.charAt(0).toUpperCase() + props.name.slice(1).toLowerCase();
   return (
-    <div id={props.name} className='control'>
-      <div id={`${props.name}-label`} className='control-label'>
-        <h2>{titleCase} Length</h2>
-        <div id={`${props.name}-length`} className='control-value'>
-          {state[`${props.name}Length`]}
-        </div>
-      </div>
-      <div id={`${props.name}-buttons`} className='control-buttons'>
-        <button
-          id={`${props.name}-decrement`}
-          onClick={() => dispatch({ name: props.name, type: 'decrement' })}
-        >
-          Decrement
-        </button>
-        <button
+    <LcarsContainerSection
+      id={props.name}
+      title={`${titleCase} Length`}
+      titleLabel={`${props.name}-label`}
+      sectionLabel={`${props.name}-length`}
+    >
+      <div id={`${props.name}-length`}>{state[`${props.name}Length`]}</div>
+      <div id={`${props.name}-buttons`}>
+        <ButtonLeft
           id={`${props.name}-increment`}
           onClick={() => dispatch({ name: props.name, type: 'increment' })}
         >
           Increment
-        </button>
+        </ButtonLeft>
+        <ButtonRight
+          id={`${props.name}-decrement`}
+          onClick={() => dispatch({ name: props.name, type: 'decrement' })}
+        >
+          Decrement
+        </ButtonRight>
       </div>
-    </div>
+    </LcarsContainerSection>
   );
 }
 
@@ -196,15 +213,15 @@ function Timer() {
         <span>{formatTime(state.timerSeconds)}</span>
       </div>
       <div id='timer-controls'>
-        <button
+        <Button
           id='start_stop'
           onClick={() => dispatch({ name: 'start_stop' })}
         >
           Start/Stop
-        </button>
-        <button id='reset' onClick={() => dispatch({ name: 'reset' })}>
+        </Button>
+        <Button id='reset' onClick={() => dispatch({ name: 'reset' })}>
           Reset
-        </button>
+        </Button>
       </div>
     </div>
   );

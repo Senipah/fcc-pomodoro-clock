@@ -1,4 +1,4 @@
-:root {
+/* :root {
   --lcars-1: #FF9900;
   --lcars-2: #CC99CC;
   --lcars-3: #9999CC;
@@ -13,7 +13,6 @@
 #clock {
   display: flex;
   flex-direction: column;
-  color: #333333;
   border: 1px solid rgba(50, 50, 50, .5);
   padding: 1rem;
   align-items: center;
@@ -78,4 +77,4 @@ button::-moz-focus-inner {
   justify-content: center;
   align-items: center;
   padding: 1rem;
-}
+} */
