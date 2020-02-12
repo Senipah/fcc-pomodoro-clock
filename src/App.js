@@ -6,11 +6,7 @@ import Clock from './Components/Clock';
 // localStorage.setItem('example_project', 'Pomodoro Clock');
 
 function App() {
-  return (
-    <div className='app'>
-      <Clock />
-    </div>
-  );
+  return <Clock />;
 }
 
 export default App;

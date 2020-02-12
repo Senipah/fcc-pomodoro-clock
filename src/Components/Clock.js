@@ -1,5 +1,4 @@
 import React from 'react';
-// import './Clock.css';
 import alarm from '../assets/audio/alertklaxon_clean.mp3';
 import {
   LcarsWrapper,
@@ -9,8 +8,10 @@ import {
   LcarsContainerSection,
   Button,
   ButtonLeft,
-  ButtonRight
+  ButtonRight,
+  Surround
 } from './Lcars';
+import styled from 'styled-components';
 const { useReducer, createContext, useContext, useEffect, useRef } = React;
 
 const initialState = {
@@ -19,7 +20,8 @@ const initialState = {
   timerMinutes: 25,
   timerSeconds: 0,
   running: false,
-  isSession: true
+  isSession: true,
+  blinkCount: 0
 };
 
 const ClockContext = createContext();
@@ -27,19 +29,20 @@ const ClockContext = createContext();
 export default function Clock() {
   const [state, dispatch] = useReducer(clockReducer, initialState);
   return (
-    <div id='clock'>
-      <ClockContext.Provider value={{ state, dispatch }}>
-        <LcarsWrapper>
-          <LcarsHeader title='pomodoro clock' color={themeColors.lcars4} />
-          <LcarsContainer title='timer' color={themeColors.lcars1}>
-            <ControlGroup />
-            <LcarsContainerSection>
-              <Timer />
-            </LcarsContainerSection>
-          </LcarsContainer>
-        </LcarsWrapper>
-      </ClockContext.Provider>
-    </div>
+    <ClockContext.Provider value={{ state, dispatch }}>
+      <LcarsWrapper>
+        <LcarsHeader title='pomodoro clock' themeColor={themeColors.lcars4} />
+        <LcarsContainer title='timer' themeColor={themeColors.lcars1}>
+          <Control name='session' themeColor={themeColors.lcars5} />
+          <Control name='break' themeColor={themeColors.lcars6} />
+          <Timer
+            themeColor={
+              state.isSession ? themeColors.lcars5 : themeColors.lcars6
+            }
+          />
+        </LcarsContainer>
+      </LcarsWrapper>
+    </ClockContext.Provider>
   );
 }
 
@@ -64,8 +67,9 @@ function clockReducer(state, action) {
 
   const tick = state => {
     const SECONDS_BOUND = 59;
-    let { timerMinutes, timerSeconds } = state;
+    let { timerMinutes, timerSeconds, blinkCount } = state;
     timerSeconds = decrement(timerSeconds);
+    blinkCount = blinkCount > 0 ? blinkCount - 1 : blinkCount;
     if (timerSeconds < 0) {
       timerMinutes = decrement(timerMinutes);
       if (timerMinutes < 0) {
@@ -76,9 +80,11 @@ function clockReducer(state, action) {
           timerMinutes = state.sessionLength;
         }
         timerSeconds = initialState.timerSeconds;
+        blinkCount = 3;
         state.alert.current.play();
         return {
           ...state,
+          blinkCount: blinkCount,
           timerMinutes: timerMinutes,
           timerSeconds: timerSeconds,
           isSession: !state.isSession
@@ -86,13 +92,15 @@ function clockReducer(state, action) {
       }
       return {
         ...state,
+        blinkCount: blinkCount,
         timerMinutes: timerMinutes,
         timerSeconds: SECONDS_BOUND
       };
     }
     return {
       ...state,
-      timerSeconds
+      timerSeconds,
+      blinkCount
     };
   };
 
@@ -133,6 +141,15 @@ function clockReducer(state, action) {
   }
 }
 
+const Screen = styled.div`
+  margin: 0 1rem;
+  font-size: 2rem;
+  min-width: 6rem;
+  border: 1px dashed #333;
+  text-align: center;
+  color: ${themeColors.modern};
+`;
+
 function Control(props) {
   const { state, dispatch } = useContext(ClockContext);
   const titleCase =
@@ -141,10 +158,8 @@ function Control(props) {
     <LcarsContainerSection
       id={props.name}
       title={`${titleCase} Length`}
-      titleLabel={`${props.name}-label`}
-      sectionLabel={`${props.name}-length`}
+      themeColor={props.themeColor}
     >
-      <div id={`${props.name}-length`}>{state[`${props.name}Length`]}</div>
       <div id={`${props.name}-buttons`}>
         <ButtonLeft
           id={`${props.name}-increment`}
@@ -159,22 +174,28 @@ function Control(props) {
           Decrement
         </ButtonRight>
       </div>
+      <Screen id={`${props.name}-length`}>
+        {state[`${props.name}Length`]}
+      </Screen>
     </LcarsContainerSection>
   );
 }
 
-function ControlGroup() {
-  const controls = ['break', 'session'];
-  return (
-    <div id='controls'>
-      {controls.map((e, i) => (
-        <Control name={e} key={i} />
-      ))}
-    </div>
-  );
-}
+const FlexColumn = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+`;
 
-function Timer() {
+const MainScreen = styled(Screen)`
+  padding: 0.5rem 1rem;
+  font-size: 4rem;
+`;
+
+function Timer(props) {
   const { state, dispatch } = useContext(ClockContext);
 
   useEffect(() => {
@@ -204,25 +225,35 @@ function Timer() {
   //   'https://www.trekcore.com/audio/redalertandklaxons/alertklaxon_clean.mp3';
 
   return (
-    <div id='timer'>
-      <audio src={alarm} ref={alert} className='clip' id='beep' />
-      <h2 id='timer-label'>{state.isSession ? 'Session' : 'Break'}</h2>
-      <div id='time-left'>
-        <span>{formatTime(state.timerMinutes)}</span>
-        <span>:</span>
-        <span>{formatTime(state.timerSeconds)}</span>
-      </div>
-      <div id='timer-controls'>
-        <Button
-          id='start_stop'
-          onClick={() => dispatch({ name: 'start_stop' })}
-        >
-          Start/Stop
-        </Button>
-        <Button id='reset' onClick={() => dispatch({ name: 'reset' })}>
-          Reset
-        </Button>
-      </div>
-    </div>
+    <LcarsContainerSection
+      id='timer'
+      title={state.isSession ? 'Session' : 'Break'}
+      themeColor={props.themeColor}
+    >
+      <audio src={alarm} ref={alert} id='beep' />
+      <Surround
+        themeColor={state.blinkCount ? themeColors.alert : themeColors.modern}
+      >
+        <FlexColumn>
+          {/* <h2 id='timer-label'>{state.isSession ? 'Session' : 'Break'}</h2> */}
+          <MainScreen id='time-left'>
+            <span>{formatTime(state.timerMinutes)}</span>
+            <span>:</span>
+            <span>{formatTime(state.timerSeconds)}</span>
+          </MainScreen>
+          <div id='timer-controls'>
+            <Button
+              id='start_stop'
+              onClick={() => dispatch({ name: 'start_stop' })}
+            >
+              Start/Stop
+            </Button>
+            <Button id='reset' onClick={() => dispatch({ name: 'reset' })}>
+              Reset
+            </Button>
+          </div>
+        </FlexColumn>
+      </Surround>
+    </LcarsContainerSection>
   );
 }
