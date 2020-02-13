@@ -9,9 +9,12 @@ import {
   Button,
   ButtonLeft,
   ButtonRight,
-  Surround
+  Surround,
+  FlexDiv,
+  Screen,
+  MainScreen
 } from './Lcars';
-import styled from 'styled-components';
+
 const { useReducer, createContext, useContext, useEffect, useRef } = React;
 
 const initialState = {
@@ -141,15 +144,6 @@ function clockReducer(state, action) {
   }
 }
 
-const Screen = styled.div`
-  margin: 0 1rem;
-  font-size: 2rem;
-  min-width: 6rem;
-  border: 1px dashed #333;
-  text-align: center;
-  color: ${themeColors.modern};
-`;
-
 function Control(props) {
   const { state, dispatch } = useContext(ClockContext);
   const titleCase =
@@ -160,7 +154,7 @@ function Control(props) {
       title={`${titleCase} Length`}
       themeColor={props.themeColor}
     >
-      <div id={`${props.name}-buttons`}>
+      <FlexDiv id={`${props.name}-buttons`} direction='row'>
         <ButtonLeft
           id={`${props.name}-increment`}
           onClick={() => dispatch({ name: props.name, type: 'increment' })}
@@ -173,7 +167,7 @@ function Control(props) {
         >
           Decrement
         </ButtonRight>
-      </div>
+      </FlexDiv>
       <Screen id={`${props.name}-length`}>
         {state[`${props.name}Length`]}
       </Screen>
@@ -181,21 +175,7 @@ function Control(props) {
   );
 }
 
-const FlexColumn = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: space-evenly;
-  align-items: center;
-  width: 100%;
-  height: 100%;
-`;
-
-const MainScreen = styled(Screen)`
-  padding: 0.5rem 1rem;
-  font-size: 4rem;
-`;
-
-function Timer(props) {
+const Timer = props => {
   const { state, dispatch } = useContext(ClockContext);
 
   useEffect(() => {
@@ -234,14 +214,14 @@ function Timer(props) {
       <Surround
         themeColor={state.blinkCount ? themeColors.alert : themeColors.modern}
       >
-        <FlexColumn>
+        <FlexDiv direction='column'>
           {/* <h2 id='timer-label'>{state.isSession ? 'Session' : 'Break'}</h2> */}
           <MainScreen id='time-left'>
             <span>{formatTime(state.timerMinutes)}</span>
             <span>:</span>
             <span>{formatTime(state.timerSeconds)}</span>
           </MainScreen>
-          <div id='timer-controls'>
+          <FlexDiv id='timer-controls'>
             <Button
               id='start_stop'
               onClick={() => dispatch({ name: 'start_stop' })}
@@ -251,9 +231,9 @@ function Timer(props) {
             <Button id='reset' onClick={() => dispatch({ name: 'reset' })}>
               Reset
             </Button>
-          </div>
-        </FlexColumn>
+          </FlexDiv>
+        </FlexDiv>
       </Surround>
     </LcarsContainerSection>
   );
-}
+};

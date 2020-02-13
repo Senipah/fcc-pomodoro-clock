@@ -11,6 +11,7 @@ import styled, {
   ThemeConsumer
 } from 'styled-components';
 import HelveticaCompressed from '../assets/fonts/Helvetica-Compressed_22459.ttf';
+import { devices } from '../mediaQueries';
 
 export const themeColors = {
   modern: '#00e7ff',
@@ -30,22 +31,44 @@ const GlobalStyle = createGlobalStyle`
   font-family: 'Helvetica-Compressed_22459';
   src: url(${HelveticaCompressed}) format('truetype');
 }
-  
 `;
 
 const defaultThemeColor = themeColors.modern;
 
+const sidebarWidths = {
+  sml: 70,
+  med: 150,
+  lrg: 300
+};
+
+const headerHeights = {
+  sml: 45,
+  med: 90
+};
+
+const toPx = val => val.toString() + 'px';
+
 const LcarsWrapperStyle = styled.div`
   box-sizing: border-box;
-  padding: 8px;
   width: 100%;
+  padding: 2px;
   height: 100%;
   display: flex;
   flex-direction: column;
   text-transform: uppercase;
   font-family: 'Helvetica-Compressed_22459', Arial, Helvetica, sans-serif;
-  background-color: black;
+  background-color: ${props => props.bg || 'black'};
   color: white;
+
+  @media ${devices.laptop} {
+    max-width: 1000px;
+    padding: 0.5rem 1rem;
+  }
+
+  @media ${devices.desktop} {
+    max-width: 2000px;
+    padding: 1rem 2rem;
+  }
 `;
 
 export const LcarsWrapper = props => {
@@ -58,11 +81,15 @@ export const LcarsWrapper = props => {
 };
 
 const HeaderStyle = styled.header`
-  padding: 1rem 2rem;
   display: grid;
-  grid-template-columns: 45px 1fr auto 45px;
-  grid-template-rows: 30px;
+  /* margin: 1px 0; */
+  grid-template-columns: 25px 1fr auto 25px;
   align-items: center;
+
+  @media ${devices.laptop} {
+    grid-template-columns: 45px 1fr auto 45px;
+    margin: 1rem 0;
+  }
 `;
 
 export const LcarsHeader = props => {
@@ -89,21 +116,28 @@ const H1 = styled.h1`
 
 const LcarsHeaderContent = styled.div`
   margin: 0 5px;
-  display: inline-block;
+`;
+
+const LcarsResponsiveHeaderContent = styled(LcarsHeaderContent)`
+  height: ${toPx(headerHeights.sml * 0.33)};
 `;
 
 const LcarsContainerStyle = styled.div`
-  padding: 1rem 2rem;
   height: 100%;
   width: 100%;
   display: grid;
-  grid-template-rows: 90px 1fr 90px;
+  grid-template-rows: 45px 1fr 45px;
+  margin: 2px 0;
+
+  @media ${devices.laptop} {
+    grid-template-rows: 45px 1fr 45px;
+    margin: 1rem 0;
+  }
 `;
 
 export const LcarsContainer = props => {
   const theme = {
-    themeColor: props.themeColor || defaultThemeColor,
-    sidebarWidth: props.sidebarWidth || 300
+    themeColor: props.themeColor || defaultThemeColor
   };
   return (
     <ThemeProvider theme={theme}>
@@ -123,8 +157,13 @@ const LcarsContainerMain = styled.div`
 
 const LcarsContainerSectionStyle = styled.section`
   display: grid;
-  grid-template-columns: ${props => props.theme.sidebarWidth.toString() + 'px'} 1fr;
+  grid-template-columns: ${toPx(sidebarWidths.sml)} 1fr;
   margin-top: 5px;
+
+  @media ${devices.laptop} {
+    grid-template-columns: ${toPx(sidebarWidths.med)} 1fr;
+  }
+
   &:last-child {
     flex-grow: 1;
     margin-bottom: 5px;
@@ -132,28 +171,22 @@ const LcarsContainerSectionStyle = styled.section`
 `;
 
 export const LcarsContainerSection = props => {
-  // console.log(props.theme.sidebarWidth);
-
   return (
     <ThemeConsumer>
       {parentTheme => {
         const theme = {
           ...parentTheme,
-          sidebarWidth: parentTheme.sidebarWidth / 2,
           themeColor: props.themeColor || parentTheme.themeColor
         };
         return (
           <ThemeProvider theme={theme}>
-            <LcarsContainerSectionStyle
-              id={props.id}
-              sidebarWidth={props.sidebarWidth}
-            >
+            <LcarsContainerSectionStyle id={props.id}>
               <LcarsSectionSidebar
                 title={props.title}
                 id={`${props.id}-label`}
                 themeColor={props.themeColor}
               />
-              <LcarsSectionBody>{props.children}</LcarsSectionBody>
+              <FlexDiv>{props.children}</FlexDiv>
             </LcarsContainerSectionStyle>
           </ThemeProvider>
         );
@@ -167,6 +200,13 @@ const LcarsHorizontalBar = styled.div`
   background-color: ${props => props.theme.themeColor};
 `;
 
+const LcarsResponsiveHorizontalBar = styled(LcarsHorizontalBar)`
+  height: ${toPx(headerHeights.sml * 0.33)};
+  @media ${devices.laptop} {
+    height: ${toPx(headerHeights.med * 0.33)};
+  }
+`;
+
 const LcarsPill = styled.div`
   height: 30px;
   background-color: ${props => props.theme.themeColor};
@@ -176,6 +216,13 @@ const LcarsPill = styled.div`
 const LcarsEndcapRight = styled(LcarsPill)`
   border-top-left-radius: 0px;
   border-bottom-left-radius: 0px;
+`;
+
+const LcarsResponsiveEndcapRight = styled(LcarsEndcapRight)`
+  height: ${toPx(headerHeights.sml * 0.33)};
+  @media ${devices.laptop} {
+    height: ${toPx(headerHeights.med * 0.33)};
+  }
 `;
 
 const LcarsEndcapLeft = styled(LcarsPill)`
@@ -201,15 +248,13 @@ const LcarsSectionSidebar = props => {
   );
 };
 
-const LcarsSectionBody = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
-
 const LcarsContainerHeaderStyle = styled.div`
   display: grid;
-  grid-template-columns: ${props => props.theme.sidebarWidth.toString() + 'px'} 1fr auto 45px;
+  grid-template-columns: ${toPx(sidebarWidths.sml * 2)} 1fr auto 45px;
+
+  @media ${devices.laptop} {
+    grid-template-columns: ${toPx(sidebarWidths.med * 2)} 1fr auto 45px;
+  }
 `;
 
 const LcarsContainerHeader = props => {
@@ -218,11 +263,11 @@ const LcarsContainerHeader = props => {
       <ThemeConsumer>
         {theme => <ElbowLeftTop fill={theme.themeColor} />}
       </ThemeConsumer>
-      <LcarsHorizontalBar />
-      <LcarsHeaderContent>
+      <LcarsResponsiveHorizontalBar />
+      <LcarsResponsiveHeaderContent>
         <H2>{props.title}</H2>
-      </LcarsHeaderContent>
-      <LcarsEndcapRight />
+      </LcarsResponsiveHeaderContent>
+      <LcarsResponsiveEndcapRight />
     </LcarsContainerHeaderStyle>
   );
 };
@@ -231,14 +276,21 @@ const H2 = styled.h2`
   color: ${props => props.theme.themeColor};
   white-space: nowrap;
   overflow: ellipsis;
+  line-height: ${toPx(headerHeights.sml * 0.33)};
 `;
 
 const LcarsContainerFooterStyle = styled.div`
   display: grid;
   grid-template-columns:
-    ${props => props.theme.sidebarWidth.toString() + 'px'} minmax(200px, 1fr)
+    ${toPx(sidebarWidths.sml * 2)} minmax(0, 1fr)
     45px;
   align-items: flex-end;
+
+  @media ${devices.laptop} {
+    grid-template-columns:
+      ${toPx(sidebarWidths.med * 2)} minmax(0, 1fr)
+      45px;
+  }
 `;
 
 const LcarsContainerFooter = props => {
@@ -247,8 +299,8 @@ const LcarsContainerFooter = props => {
       <ThemeConsumer>
         {theme => <ElbowLeftBottom fill={theme.themeColor} />}
       </ThemeConsumer>
-      <LcarsHorizontalBar />
-      <LcarsEndcapRight />
+      <LcarsResponsiveHorizontalBar />
+      <LcarsResponsiveEndcapRight />
     </LcarsContainerFooterStyle>
   );
 };
@@ -259,9 +311,10 @@ export const Button = styled.button`
   color: 'black';
   border: none;
   border-radius: 60px;
-  margin: 0.5em;
-  padding: 0.5em 1em;
+  margin: 0.25rem;
+  padding: 0.25rem 0.5rem;
   font-family: inherit;
+  font-size: 1rem;
   border: 1px solid transparent;
   &:hover {
     background-color: transparent;
@@ -270,6 +323,10 @@ export const Button = styled.button`
   }
   &:active {
     transform: translate(1px);
+  }
+
+  @media ${devices.laptop} {
+    padding: 0.5rem 1rem;
   }
 `;
 
@@ -303,9 +360,10 @@ export const ButtonRight = styled(Button)`
 `;
 
 const SurroundStyle = styled.div`
-  padding: 1rem;
+  padding: 0.25rem;
   display: grid;
-  grid-template-columns: 25px 1fr 25px;
+  column-gap: 1rem;
+  grid-template-columns: 15px 1fr 15px;
   grid-template-rows: minmax(0, 1fr);
   width: auto;
   height: 100%;
@@ -313,12 +371,11 @@ const SurroundStyle = styled.div`
   max-height: 100%;
   align-items: center;
   justify-content: center;
-`;
 
-const SurroundBody = styled.div`
-  width: 100%;
-  height: 100%;
-  padding: 0 1rem;
+  @media ${devices.laptop} {
+    padding: 1rem;
+    grid-template-columns: 25px 1fr 25px;
+  }
 `;
 
 export const Surround = props => {
@@ -329,9 +386,72 @@ export const Surround = props => {
     <ThemeProvider theme={theme}>
       <SurroundStyle>
         <SurroundLeft />
-        <SurroundBody>{props.children}</SurroundBody>
+        <FlexDiv>{props.children}</FlexDiv>
         <SurroundRight />
       </SurroundStyle>
     </ThemeProvider>
   );
 };
+
+const FlexDivStyle = styled.div`
+  display: flex;
+  flex-direction: ${props => props.direction || 'column'};
+  justify-content: center;
+  align-items: space-evenly;
+  width: min-content;
+  height: min-content;
+  justify-self: center;
+`;
+
+const ResponsiveFlexDivStyle = styled(FlexDivStyle)`
+  flex-direction: column;
+  width: auto;
+  height: auto;
+  @media ${devices.laptop} {
+    flex-direction: row;
+  }
+`;
+
+export const FlexDiv = props => {
+  const directionValues = [
+    'column',
+    'column-reverse',
+    'inherit',
+    'initial',
+    'row',
+    'row-reverse',
+    'unset'
+  ];
+  return directionValues.includes(props.direction) ? (
+    <FlexDivStyle direction={props.direction}>{props.children}</FlexDivStyle>
+  ) : (
+    <ResponsiveFlexDivStyle>{props.children}</ResponsiveFlexDivStyle>
+  );
+};
+
+export const Screen = styled(ResponsiveFlexDivStyle)`
+  margin: 0.25rem;
+  padding: 0.25rem 0.5rem;
+  font-size: 1.25rem;
+  min-width: 60px;
+  width: auto;
+  border: 1px dashed #333;
+  text-align: center;
+  color: ${themeColors.modern};
+  flex-direction: row;
+  align-self: center;
+  background-color: #111;
+  @media ${devices.laptop} {
+    font-size: 2.5rem;
+  }
+`;
+
+export const MainScreen = styled(Screen)`
+  padding: 0.5rem 1rem;
+  font-size: 2rem;
+  width: 100%;
+
+  @media ${devices.laptop} {
+    font-size: 4.5rem;
+  }
+`;
