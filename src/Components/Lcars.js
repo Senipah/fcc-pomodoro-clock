@@ -510,6 +510,7 @@ const LcarsContainerFooter = props => {
 export const Button = styled.button`
   /* align-self: stretch;
   justify-self: center; */
+  -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
   background-color: ${props => props.themeColor || defaultThemeColor};
   color: 'black';
   border: none;
