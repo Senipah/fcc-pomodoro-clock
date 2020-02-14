@@ -35,24 +35,51 @@ const GlobalStyle = createGlobalStyle`
 
 const defaultThemeColor = themeColors.modern;
 
-const sidebarWidths = {
-  sml: 70,
-  med: 150,
-  lrg: 300
-};
-
-const headerHeights = {
-  sml: 45,
-  med: 90
+const deviceDimensionProps = {
+  mobileS: {
+    sidebarWidth: 70,
+    headerHeight: 45,
+    surroundWidth: 15
+  },
+  mobileM: {
+    sidebarWidth: 70,
+    headerHeight: 45,
+    surroundWidth: 15
+  },
+  mobileL: {
+    sidebarWidth: 100,
+    headerHeight: 45,
+    surroundWidth: 15
+  },
+  tablet: {
+    sidebarWidth: 150,
+    headerHeight: 90,
+    surroundWidth: 25
+  },
+  laptop: {
+    sidebarWidth: 150,
+    headerHeight: 90,
+    surroundWidth: 25
+  },
+  laptopL: {
+    sidebarWidth: 300,
+    headerHeight: 90,
+    surroundWidth: 25
+  },
+  desktop: {
+    sidebarWidth: 300,
+    headerHeight: 90,
+    surroundWidth: 25
+  }
 };
 
 const toPx = val => val.toString() + 'px';
 
 const LcarsWrapperStyle = styled.div`
+  min-height: 0;
+  max-height: 100%;
   box-sizing: border-box;
-  width: 100%;
   padding: 2px;
-  height: 100%;
   display: flex;
   flex-direction: column;
   text-transform: uppercase;
@@ -60,8 +87,13 @@ const LcarsWrapperStyle = styled.div`
   background-color: ${props => props.bg || 'black'};
   color: white;
 
+  &:first-child {
+    /* flex-grow: 0; */
+  }
+
   @media ${devices.laptop} {
     max-width: 1000px;
+
     padding: 0.5rem 1rem;
   }
 
@@ -82,13 +114,12 @@ export const LcarsWrapper = props => {
 
 const HeaderStyle = styled.header`
   display: grid;
-  /* margin: 1px 0; */
   grid-template-columns: 25px 1fr auto 25px;
   align-items: center;
-
+  max-height: 60px;
   @media ${devices.laptop} {
     grid-template-columns: 45px 1fr auto 45px;
-    margin: 1rem 0;
+    margin: 0.5rem 0;
   }
 `;
 
@@ -119,19 +150,69 @@ const LcarsHeaderContent = styled.div`
 `;
 
 const LcarsResponsiveHeaderContent = styled(LcarsHeaderContent)`
-  height: ${toPx(headerHeights.sml * 0.33)};
+  height: ${toPx(deviceDimensionProps.mobileS.headerHeight * 0.33)};
+
+  @media ${devices.mobileM} {
+    height: ${toPx(deviceDimensionProps.mobileM.headerHeight * 0.33)};
+  }
+  @media ${devices.mobileL} {
+    height: ${toPx(deviceDimensionProps.mobileL.headerHeight * 0.33)};
+  }
+  @media ${devices.tablet} {
+    height: ${toPx(deviceDimensionProps.tablet.headerHeight * 0.33)};
+  }
+  @media ${devices.laptop} {
+    height: ${toPx(deviceDimensionProps.laptop.headerHeight * 0.33)};
+  }
+  @media ${devices.laptopL} {
+    height: ${toPx(deviceDimensionProps.laptopL.headerHeight * 0.33)};
+  }
+
+  @media ${devices.desktop} {
+    height: ${toPx(deviceDimensionProps.desktop.headerHeight * 0.33)};
+  }
 `;
 
 const LcarsContainerStyle = styled.div`
-  height: 100%;
-  width: 100%;
   display: grid;
-  grid-template-rows: 45px 1fr 45px;
+  min-width: 0;
+  min-height: 0;
+  max-height: 100%;
+  grid-template-rows: ${toPx(deviceDimensionProps.mobileS.headerHeight)} 1fr ${toPx(
+      deviceDimensionProps.mobileS.headerHeight
+    )};
   margin: 2px 0;
 
+  @media ${devices.mobileM} {
+    grid-template-rows: ${toPx(deviceDimensionProps.mobileM.headerHeight)} 1fr ${toPx(
+        deviceDimensionProps.mobileM.headerHeight
+      )};
+  }
+  @media ${devices.mobileL} {
+    grid-template-rows: ${toPx(deviceDimensionProps.mobileL.headerHeight)} 1fr ${toPx(
+        deviceDimensionProps.mobileL.headerHeight
+      )};
+  }
+  @media ${devices.tablet} {
+    grid-template-rows: ${toPx(deviceDimensionProps.tablet.headerHeight)} 1fr ${toPx(
+        deviceDimensionProps.tablet.headerHeight
+      )};
+  }
   @media ${devices.laptop} {
-    grid-template-rows: 45px 1fr 45px;
-    margin: 1rem 0;
+    grid-template-rows: ${toPx(deviceDimensionProps.laptop.headerHeight)} 1fr ${toPx(
+        deviceDimensionProps.laptop.headerHeight
+      )};
+  }
+  @media ${devices.laptopL} {
+    grid-template-rows: ${toPx(deviceDimensionProps.laptopL.headerHeight)} 1fr ${toPx(
+        deviceDimensionProps.laptopL.headerHeight
+      )};
+  }
+
+  @media ${devices.desktop} {
+    grid-template-rows: ${toPx(deviceDimensionProps.desktop.headerHeight)} 1fr ${toPx(
+        deviceDimensionProps.desktop.headerHeight
+      )};
   }
 `;
 
@@ -157,15 +238,32 @@ const LcarsContainerMain = styled.div`
 
 const LcarsContainerSectionStyle = styled.section`
   display: grid;
-  grid-template-columns: ${toPx(sidebarWidths.sml)} 1fr;
+  grid-template-columns: ${toPx(deviceDimensionProps.mobileS.sidebarWidth)} 1fr;
   margin-top: 5px;
+  flex: 0;
 
+  @media ${devices.mobileM} {
+    grid-template-columns: ${toPx(deviceDimensionProps.mobileM.sidebarWidth)} 1fr;
+  }
+  @media ${devices.mobileL} {
+    grid-template-columns: ${toPx(deviceDimensionProps.mobileL.sidebarWidth)} 1fr;
+  }
+  @media ${devices.tablet} {
+    grid-template-columns: ${toPx(deviceDimensionProps.tablet.sidebarWidth)} 1fr;
+  }
   @media ${devices.laptop} {
-    grid-template-columns: ${toPx(sidebarWidths.med)} 1fr;
+    grid-template-columns: ${toPx(deviceDimensionProps.laptop.sidebarWidth)} 1fr;
+  }
+  @media ${devices.laptopL} {
+    grid-template-columns: ${toPx(deviceDimensionProps.laptopL.sidebarWidth)} 1fr;
+  }
+
+  @media ${devices.desktop} {
+    grid-template-columns: ${toPx(deviceDimensionProps.desktop.sidebarWidth)} 1fr;
   }
 
   &:last-child {
-    flex-grow: 1;
+    flex: 1;
     margin-bottom: 5px;
   }
 `;
@@ -186,7 +284,7 @@ export const LcarsContainerSection = props => {
                 id={`${props.id}-label`}
                 themeColor={props.themeColor}
               />
-              <FlexDiv>{props.children}</FlexDiv>
+              {props.children}
             </LcarsContainerSectionStyle>
           </ThemeProvider>
         );
@@ -201,9 +299,26 @@ const LcarsHorizontalBar = styled.div`
 `;
 
 const LcarsResponsiveHorizontalBar = styled(LcarsHorizontalBar)`
-  height: ${toPx(headerHeights.sml * 0.33)};
+  height: ${toPx(deviceDimensionProps.mobileS.headerHeight * 0.33)};
+
+  @media ${devices.mobileM} {
+    height: ${toPx(deviceDimensionProps.mobileM.headerHeight * 0.33)};
+  }
+  @media ${devices.mobileL} {
+    height: ${toPx(deviceDimensionProps.mobileL.headerHeight * 0.33)};
+  }
+  @media ${devices.tablet} {
+    height: ${toPx(deviceDimensionProps.tablet.headerHeight * 0.33)};
+  }
   @media ${devices.laptop} {
-    height: ${toPx(headerHeights.med * 0.33)};
+    height: ${toPx(deviceDimensionProps.laptop.headerHeight * 0.33)};
+  }
+  @media ${devices.laptopL} {
+    height: ${toPx(deviceDimensionProps.laptopL.headerHeight * 0.33)};
+  }
+
+  @media ${devices.desktop} {
+    height: ${toPx(deviceDimensionProps.desktop.headerHeight * 0.33)};
   }
 `;
 
@@ -219,9 +334,26 @@ const LcarsEndcapRight = styled(LcarsPill)`
 `;
 
 const LcarsResponsiveEndcapRight = styled(LcarsEndcapRight)`
-  height: ${toPx(headerHeights.sml * 0.33)};
+  height: ${toPx(deviceDimensionProps.mobileS.headerHeight * 0.33)};
+
+  @media ${devices.mobileM} {
+    height: ${toPx(deviceDimensionProps.mobileM.headerHeight * 0.33)};
+  }
+  @media ${devices.mobileL} {
+    height: ${toPx(deviceDimensionProps.mobileL.headerHeight * 0.33)};
+  }
+  @media ${devices.tablet} {
+    height: ${toPx(deviceDimensionProps.tablet.headerHeight * 0.33)};
+  }
   @media ${devices.laptop} {
-    height: ${toPx(headerHeights.med * 0.33)};
+    height: ${toPx(deviceDimensionProps.laptop.headerHeight * 0.33)};
+  }
+  @media ${devices.laptopL} {
+    height: ${toPx(deviceDimensionProps.laptopL.headerHeight * 0.33)};
+  }
+
+  @media ${devices.desktop} {
+    height: ${toPx(deviceDimensionProps.desktop.headerHeight * 0.33)};
   }
 `;
 
@@ -236,7 +368,7 @@ const LcarsSectionSidebarStyle = styled.div`
   align-items: center;
   text-align: right;
   color: black;
-  padding: 0.5rem;
+  padding: 0.25rem;
   background-color: ${props => props.themeColor || defaultThemeColor};
 `;
 
@@ -250,10 +382,34 @@ const LcarsSectionSidebar = props => {
 
 const LcarsContainerHeaderStyle = styled.div`
   display: grid;
-  grid-template-columns: ${toPx(sidebarWidths.sml * 2)} 1fr auto 45px;
+  grid-template-columns: ${toPx(deviceDimensionProps.mobileS.sidebarWidth * 2)} 1fr auto 45px;
 
+  @media ${devices.mobileM} {
+    grid-template-columns: ${toPx(
+        deviceDimensionProps.mobileM.sidebarWidth * 2
+      )} 1fr auto 45px;
+  }
+  @media ${devices.mobileL} {
+    grid-template-columns: ${toPx(
+        deviceDimensionProps.mobileL.sidebarWidth * 2
+      )} 1fr auto 45px;
+  }
+  @media ${devices.tablet} {
+    grid-template-columns: ${toPx(deviceDimensionProps.tablet.sidebarWidth * 2)} 1fr auto 45px;
+  }
   @media ${devices.laptop} {
-    grid-template-columns: ${toPx(sidebarWidths.med * 2)} 1fr auto 45px;
+    grid-template-columns: ${toPx(deviceDimensionProps.laptop.sidebarWidth * 2)} 1fr auto 45px;
+  }
+  @media ${devices.laptopL} {
+    grid-template-columns: ${toPx(
+        deviceDimensionProps.laptopL.sidebarWidth * 2
+      )} 1fr auto 45px;
+  }
+
+  @media ${devices.desktop} {
+    grid-template-columns: ${toPx(
+        deviceDimensionProps.desktop.sidebarWidth * 2
+      )} 1fr auto 45px;
   }
 `;
 
@@ -276,19 +432,65 @@ const H2 = styled.h2`
   color: ${props => props.theme.themeColor};
   white-space: nowrap;
   overflow: ellipsis;
-  line-height: ${toPx(headerHeights.sml * 0.33)};
+  line-height: ${toPx(deviceDimensionProps.mobileS.headerHeight * 0.33)};
+
+  @media ${devices.mobileM} {
+    line-height: ${toPx(deviceDimensionProps.mobileM.headerHeight * 0.33)};
+  }
+  @media ${devices.mobileL} {
+    line-height: ${toPx(deviceDimensionProps.mobileL.headerHeight * 0.33)};
+  }
+  @media ${devices.tablet} {
+    line-height: ${toPx(deviceDimensionProps.tablet.headerHeight * 0.33)};
+  }
+  @media ${devices.laptop} {
+    line-height: ${toPx(deviceDimensionProps.laptop.headerHeight * 0.33)};
+  }
+  @media ${devices.laptopL} {
+    line-height: ${toPx(deviceDimensionProps.laptopL.headerHeight * 0.33)};
+  }
+
+  @media ${devices.desktop} {
+    line-height: ${toPx(deviceDimensionProps.desktop.headerHeight * 0.33)};
+  }
 `;
 
 const LcarsContainerFooterStyle = styled.div`
   display: grid;
   grid-template-columns:
-    ${toPx(sidebarWidths.sml * 2)} minmax(0, 1fr)
+    ${toPx(deviceDimensionProps.mobileS.sidebarWidth * 2)} minmax(0, 1fr)
     45px;
   align-items: flex-end;
 
+  @media ${devices.mobileM} {
+    grid-template-columns:
+      ${toPx(deviceDimensionProps.mobileM.sidebarWidth * 2)} minmax(0, 1fr)
+      45px;
+  }
+  @media ${devices.mobileL} {
+    grid-template-columns:
+      ${toPx(deviceDimensionProps.mobileL.sidebarWidth * 2)} minmax(0, 1fr)
+      45px;
+  }
+  @media ${devices.tablet} {
+    grid-template-columns:
+      ${toPx(deviceDimensionProps.tablet.sidebarWidth * 2)} minmax(0, 1fr)
+      45px;
+  }
   @media ${devices.laptop} {
     grid-template-columns:
-      ${toPx(sidebarWidths.med * 2)} minmax(0, 1fr)
+      ${toPx(deviceDimensionProps.laptop.sidebarWidth * 2)} minmax(0, 1fr)
+      45px;
+  }
+  @media ${devices.laptopL} {
+    grid-template-columns:
+      ${toPx(deviceDimensionProps.laptopL.sidebarWidth * 2)} minmax(0, 1fr)
+      45px;
+  }
+
+  @media ${devices.desktop} {
+    grid-template-columns:
+      ${toPx(deviceDimensionProps.desktop.sidebarWidth * 2)} minmax(0, 1fr)
       45px;
   }
 `;
@@ -306,7 +508,8 @@ const LcarsContainerFooter = props => {
 };
 
 export const Button = styled.button`
-  min-width: 50px;
+  /* align-self: stretch;
+  justify-self: center; */
   background-color: ${props => props.themeColor || defaultThemeColor};
   color: 'black';
   border: none;
@@ -316,6 +519,8 @@ export const Button = styled.button`
   font-family: inherit;
   font-size: 1rem;
   border: 1px solid transparent;
+  max-width: 100px;
+  justify-self: center;
   &:hover {
     background-color: transparent;
     color: ${props => props.themeColor || defaultThemeColor};
@@ -326,7 +531,7 @@ export const Button = styled.button`
   }
 
   @media ${devices.laptop} {
-    padding: 0.5rem 1rem;
+    /* padding: 0.5rem 1rem; */
   }
 `;
 
@@ -334,6 +539,8 @@ export const ButtonLeft = styled(Button)`
   border-top-right-radius: 0px;
   border-bottom-right-radius: 0px;
   margin-right: 1px;
+  align-self: center;
+  justify-self: stretch;
   background-color: ${props => props.themeColor || themeColors.lcars7};
   &:hover {
     color: ${props => props.themeColor || themeColors.lcars7};
@@ -349,6 +556,8 @@ export const ButtonRight = styled(Button)`
   border-top-left-radius: 0px;
   border-bottom-left-radius: 0px;
   margin-left: 1px;
+  align-self: center;
+  justify-self: stretch;
   background-color: ${props => props.themeColor || themeColors.lcars4};
   &:hover {
     color: ${props => props.themeColor || themeColors.lcars4};
@@ -363,16 +572,23 @@ const SurroundStyle = styled.div`
   padding: 0.25rem;
   display: grid;
   column-gap: 1rem;
-  grid-template-columns: 15px 1fr 15px;
+  grid-template-columns: 15px auto 15px;
   grid-template-rows: minmax(0, 1fr);
-  width: auto;
-  height: 100%;
-  max-width: 100%;
-  max-height: 100%;
   align-items: center;
   justify-content: center;
 
+  @media ${devices.mobileM} {
+  }
+  @media ${devices.mobileL} {
+  }
+  @media ${devices.tablet} {
+  }
   @media ${devices.laptop} {
+  }
+  @media ${devices.laptopL} {
+  }
+
+  @media ${devices.desktop} {
     padding: 1rem;
     grid-template-columns: 25px 1fr 25px;
   }
@@ -393,65 +609,69 @@ export const Surround = props => {
   );
 };
 
-const FlexDivStyle = styled.div`
+export const FlexDiv = styled.div`
   display: flex;
-  flex-direction: ${props => props.direction || 'column'};
-  justify-content: center;
-  align-items: space-evenly;
-  width: min-content;
-  height: min-content;
-  justify-self: center;
+  flex-direction: ${props => props.flexDirection};
+  padding: 0.25rem 0.5rem;
+  min-height: 0;
+  max-height: 100%;
+  max-width: 100%;
+  justify-content: ${props => props.justifyContent};
+  align-items: ${props => props.alignItems};
 `;
 
-const ResponsiveFlexDivStyle = styled(FlexDivStyle)`
-  flex-direction: column;
-  width: auto;
-  height: auto;
+FlexDiv.defaultProps = {
+  flexDirection: 'column',
+  justifyContent: 'center',
+  alignItems: 'center'
+};
+
+export const ResponsiveFlexDiv = styled(FlexDiv)`
+  flex-direction: ${props => props.smlFlexDirection};
+  justify-content: ${props => props.smlJustifyContent};
+  align-items: ${props => props.smlAlignItems};
+  /* width: auto;
+  height: auto; */
   @media ${devices.laptop} {
-    flex-direction: row;
+    flex-direction: ${props => props.lrgFlexDirection};
+    justify-content: ${props => props.lrgJustifyContent};
+    align-items: ${props => props.lrgAlignItems};
   }
 `;
 
-export const FlexDiv = props => {
-  const directionValues = [
-    'column',
-    'column-reverse',
-    'inherit',
-    'initial',
-    'row',
-    'row-reverse',
-    'unset'
-  ];
-  return directionValues.includes(props.direction) ? (
-    <FlexDivStyle direction={props.direction}>{props.children}</FlexDivStyle>
-  ) : (
-    <ResponsiveFlexDivStyle>{props.children}</ResponsiveFlexDivStyle>
-  );
+ResponsiveFlexDiv.defaultProps = {
+  smlFlexDirection: 'column',
+  smlJustifyContent: 'center',
+  smlAlignItems: 'center',
+  lrgFlexDirection: 'row',
+  lrgJustifyContent: 'center',
+  lrgAlignItems: 'center'
 };
 
-export const Screen = styled(ResponsiveFlexDivStyle)`
-  margin: 0.25rem;
-  padding: 0.25rem 0.5rem;
-  font-size: 1.25rem;
+export const Screen = styled(FlexDiv)`
+  padding: 5px 10px;
+  font-size: 2rem;
   min-width: 60px;
-  width: auto;
+  /* justify-content: ; */
   border: 1px dashed #333;
   text-align: center;
   color: ${themeColors.modern};
   flex-direction: row;
-  align-self: center;
   background-color: #111;
+  justify-self: center;
+  align-self: center;
+  max-width: max-content;
   @media ${devices.laptop} {
-    font-size: 2.5rem;
+    font-size: 1rem;
   }
 `;
 
 export const MainScreen = styled(Screen)`
   padding: 0.5rem 1rem;
-  font-size: 2rem;
-  width: 100%;
+  font-size: 3rem;
+  max-height: min-content;
 
   @media ${devices.laptop} {
-    font-size: 4.5rem;
+    font-size: 3rem;
   }
 `;

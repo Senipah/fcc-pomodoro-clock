@@ -1,8 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
 
-// const getFill = val => (val ? val : 'gray');
-
 const StyledSvg = styled.svg`
   width: 100%;
   height: 0;

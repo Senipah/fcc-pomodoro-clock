@@ -12,7 +12,8 @@ import {
   Surround,
   FlexDiv,
   Screen,
-  MainScreen
+  MainScreen,
+  ResponsiveFlexDiv
 } from './Lcars';
 
 const { useReducer, createContext, useContext, useEffect, useRef } = React;
@@ -154,23 +155,35 @@ function Control(props) {
       title={`${titleCase} Length`}
       themeColor={props.themeColor}
     >
-      <FlexDiv id={`${props.name}-buttons`} direction='row'>
-        <ButtonLeft
-          id={`${props.name}-increment`}
-          onClick={() => dispatch({ name: props.name, type: 'increment' })}
+      <ResponsiveFlexDiv>
+        <ResponsiveFlexDiv
+          id={`${props.name}-buttons`}
+          smlFlexDirection='row'
+          smlJustifyContent='center'
+          lrgJustifyContent='flex-end'
         >
-          Increment
-        </ButtonLeft>
-        <ButtonRight
-          id={`${props.name}-decrement`}
-          onClick={() => dispatch({ name: props.name, type: 'decrement' })}
+          <ButtonLeft
+            id={`${props.name}-increment`}
+            onClick={() => dispatch({ name: props.name, type: 'increment' })}
+          >
+            Increment
+          </ButtonLeft>
+          <ButtonRight
+            id={`${props.name}-decrement`}
+            onClick={() => dispatch({ name: props.name, type: 'decrement' })}
+          >
+            Decrement
+          </ButtonRight>
+        </ResponsiveFlexDiv>
+        <ResponsiveFlexDiv
+          smlJustifyContent='center'
+          lrgJustifyContent='flex-start'
         >
-          Decrement
-        </ButtonRight>
-      </FlexDiv>
-      <Screen id={`${props.name}-length`}>
-        {state[`${props.name}Length`]}
-      </Screen>
+          <Screen id={`${props.name}-length`}>
+            {state[`${props.name}Length`]}
+          </Screen>
+        </ResponsiveFlexDiv>
+      </ResponsiveFlexDiv>
     </LcarsContainerSection>
   );
 }
@@ -214,14 +227,14 @@ const Timer = props => {
       <Surround
         themeColor={state.blinkCount ? themeColors.alert : themeColors.modern}
       >
-        <FlexDiv direction='column'>
+        <FlexDiv flexDirection='column'>
           {/* <h2 id='timer-label'>{state.isSession ? 'Session' : 'Break'}</h2> */}
           <MainScreen id='time-left'>
             <span>{formatTime(state.timerMinutes)}</span>
             <span>:</span>
             <span>{formatTime(state.timerSeconds)}</span>
           </MainScreen>
-          <FlexDiv id='timer-controls'>
+          <FlexDiv id='timer-controls' flexDirection='row'>
             <Button
               id='start_stop'
               onClick={() => dispatch({ name: 'start_stop' })}
