@@ -97,9 +97,14 @@ const LcarsWrapperStyle = styled.div`
     padding: 0.5rem 1rem;
   }
 
+  @media ${devices.laptopL} {
+    max-width: 1500px;
+
+    padding: 1rem 2rem;
+  }
+
   @media ${devices.desktop} {
     max-width: 2000px;
-    padding: 1rem 2rem;
   }
 `;
 
