@@ -230,9 +230,7 @@ const Timer = props => {
         <FlexDiv flexDirection='column'>
           {/* <h2 id='timer-label'>{state.isSession ? 'Session' : 'Break'}</h2> */}
           <MainScreen id='time-left'>
-            <span>{formatTime(state.timerMinutes)}</span>
-            <span>:</span>
-            <span>{formatTime(state.timerSeconds)}</span>
+            {`${formatTime(state.timerMinutes)}:${formatTime(state.timerSeconds)}`}
           </MainScreen>
           <FlexDiv id='timer-controls' flexDirection='row'>
             <Button
